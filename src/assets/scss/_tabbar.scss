@@ -1,0 +1,18 @@
+@import "mixin";
+  .g-tabbar {
+    display: flex;
+    width: 100%;
+    height: $tabbar-height;
+    background-color: #fff;
+
+    .g-tabbar-item {
+      flex: 1;
+      @include flex-center(column);
+      text-align: center;
+
+      .iconfont{
+        margin-top: 4px;
+        font-size: $icon-font-size;
+      }
+    }
+  }
