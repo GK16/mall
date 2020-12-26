@@ -6,11 +6,11 @@
 </template>
 
 <script>
-  import {swiper} from 'vue-awesome-swiper';
+  import {Swiper} from 'vue-awesome-swiper';
   export default {
     name: 'MeSlider',
     components: {
-      swiper
+      Swiper
     },
     props: {
       direction: {
@@ -27,7 +27,7 @@
         type: Number,
         default: 3000,
         validator(value) {
-          return value > 0;
+          return value >= 0;
         }
       },
       loop: {
@@ -61,4 +61,8 @@
 
 <style lang="scss" scoped>
   @import "~assets/scss/mixin";
+  .swiper-container {
+    width: 100%;
+    height: 100%;
+  }
 </style>
