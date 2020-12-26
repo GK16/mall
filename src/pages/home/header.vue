@@ -1,5 +1,5 @@
 <template>
-  <me-navbar class="header">
+  <me-navbar class="header" title="title">
     <i class="iconfont icon-richscan_icon" slot="left"></i>
     <div slot="center">搜索框</div>
     <i class="iconfont icon-xiaoxi" slot="right"></i>
@@ -20,9 +20,7 @@
   @import "~assets/scss/mixin";
   .header {
     &.mine-navbar{
-      // background-color: transparent;
-      background-color: $header-bgc-translucent;
-
+      background-color: transparent;
     }
 
     .iconfont {
