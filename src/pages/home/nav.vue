@@ -16,16 +16,40 @@
 </template>
 
 <script>
+  import {navItems} from './config';
   export default {
     name: 'HomeNav',
-    data() {
-      return {
-        
-      };
+    created() {
+      this.navs = navItems;
     }
   };
 </script>
 
 <style lang="scss" scoped>
   @import "~assets/scss/mixin";
+
+  .nav {
+    width: 100%;
+    padding-top: 15px;
+    background-color: #fff;
+
+    &-list {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    &-item {
+      width: 20%;
+      margin-bottom: 15px;
+    }
+
+    &-link {
+      @include flex-center(column);
+    }
+
+    &-pic {
+      width: 60%;
+      margin-bottom: 8px;
+    }
+  }
 </style>
