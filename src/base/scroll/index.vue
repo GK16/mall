@@ -1,5 +1,5 @@
 <template>
-  <swiper :options="swiperOption">
+  <swiper :options="swiperOption" ref="swiper">
     <swiper-slide>
       <slot></slot>
     </swiper-slide>
@@ -19,6 +19,9 @@
       scrollbar: {
         type: Boolean,
         default: true
+      },
+      data: {
+        type: [Array, Object]
       }
     },
     data() {
@@ -34,20 +37,29 @@
           }
         }
       };
+    },
+    watch: {
+      data() {
+        this.update();
+      }
+    },
+    methods: {
+      update() {
+        this.$reds.swiper && this.$reds.swiper.update();
+      }
     }
   };
 </script>
 
 <style lang="scss" scoped>
-  @import "~assets/scss/mixin";
   .swiper-container {
     overflow: hidden;
     width: 100%;
     height: 100%;
   }
 
-  .swiper-wripper{
-    height:auto;
+  .swiper-wrapper{
+    height: auto;
   }
 
   .swiper-slide {
