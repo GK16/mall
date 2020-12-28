@@ -13,7 +13,7 @@ fastclick.attach(document.body);
 Vue.use(VueLazyload, {
   preload: 1,
   error: require('assets/img/error.png'),
-  loading: require('assets/img/loading.png'),
+  loading: require('assets/img/loading.gif'),
   attempt: 1
 });
 

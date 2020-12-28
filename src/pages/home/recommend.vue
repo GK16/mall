@@ -126,11 +126,10 @@
       display: block;
     }
     &-pic {
-      position: absolute;
-      top: 0;
-      left: 0;
+      position: relative;
       width: 100%;
-      margin-top: 100%;
+      padding-top: 100%;
+      margin-bottom: 5px;
     }
     &-img {
       position: absolute;

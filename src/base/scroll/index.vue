@@ -45,7 +45,8 @@
     },
     methods: {
       update() {
-        this.$reds.swiper && this.$reds.swiper.update();
+        console.log(this.$refs.swiper);
+        this.$refs.swiper && this.$refs.swiper.updateSwiper();
       }
     }
   };

@@ -30,7 +30,7 @@
     },
     data() {
       return {
-        recommend: []
+        recommends: []
       };
     },
     methods: {
