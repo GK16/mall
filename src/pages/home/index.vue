@@ -6,7 +6,9 @@
     <me-scroll
       :data="recommends"
       pullDown
+      pullUp
       @pull-down="pullToRefresh"
+      @pull-up="pullToLoadMore"
     >
       <home-slider ref="slider"></home-slider>
       <home-nav></home-nav>
@@ -47,6 +49,18 @@
         //   console.log('freshed');
         //   pullDownEnd();
         // }, 1000);
+      },
+      pullToLoadMore(pullUpEnd) {
+        // setTimeout(() => {
+        //   console.log('freshed');
+        //   pullUpEnd();
+        // }, 1000);
+        this.$refs.recommend.update().then(pullUpEnd).catch(err => {
+          if (err) {
+            console.log(err);
+          }
+          pullUpEnd();
+        });
       }
     }
   };
