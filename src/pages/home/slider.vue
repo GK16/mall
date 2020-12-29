@@ -2,6 +2,7 @@
   <div class="slide-wrapper">
     <me-loading v-if="!sliders.length"></me-loading>
     <me-slider
+      :data="sliders"
       :direction="direction"
       :loop="loop"
       :interval="interval"
@@ -44,11 +45,15 @@
       };
     },
     created() {
-      this.getSliders();
+      return this.getSliders();
     },
     methods: {
+      update() {
+        return this.getSliders();
+      },
+
       getSliders() {
-        getHomeSlider().then(data => {
+        return getHomeSlider().then(data => {
           this.sliders = data;
         });
       }

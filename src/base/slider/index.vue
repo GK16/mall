@@ -1,5 +1,5 @@
 <template>
-  <swiper :option="swiperOption">
+  <swiper :option="swiperOption" :key="keyID">
     <slot></slot>
     <div class="swiper-pagination" v-if="pagination" slot="pagination"></div>
   </swiper>
@@ -37,11 +37,32 @@
       pagination: {
         type: Boolean,
         default: true
+      },
+      data: {
+        type: Array,
+        default() {
+          return [];
+        }
       }
     },
     data() {
       return {
-        swiperOption: {
+        keyID: Math.random()
+      };
+    },
+    watch: {
+      data: function (newData) {
+        if (newData.length === 0) return;
+        this.swiperOption.loop = newData.length === 1 ? false : this.loop;
+        this.keyID = Math.random();
+      }
+    },
+    created() {
+      this.init();
+    },
+    methods: {
+      init() {
+        this.swiperOption = {
           watchOverflow: true,
           direction: this.direction,
           autoplay: this.interval ? {
@@ -49,12 +70,12 @@
             disableOnInteraction: false
           } : false,
           slidesPerview: 1,
-          loop: this.loop,
+          loop: this.data.length <= 1 ? false : this.loop,
           pagination: {
             el: this.pagination ? '.swiper-pagination' : null
           }
-        }
-      };
+        };
+      }
     }
   };
 </script>

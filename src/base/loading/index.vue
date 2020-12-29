@@ -10,9 +10,9 @@
     </span>
     <span
       class="mine-loading-text"
-      v-if="text"
+      v-if="loadingText"
     >
-      {{text}}
+      {{loadingText}}
     </span>
   </div>
 </template>
@@ -35,6 +35,21 @@
       inline: {
         type: Boolean,
         default: false
+      }
+    },
+    data() {
+      return {
+        loadingText: this.text
+      };
+    },
+    watch: {
+      text(text) {
+        this.loadingText = text;
+      }
+    },
+    methods: {
+      setText(text) {
+        this.loadingText = text;
       }
     }
   };

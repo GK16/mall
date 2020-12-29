@@ -1,5 +1,13 @@
 <template>
   <swiper :options="swiperOption" ref="swiper">
+    <div class="mine-scroll-pull-down" v-if="pullDown">
+      <me-loading
+        :text="pullDownText"
+        inline
+        ref="pullDownLoading"
+      >
+      </me-loading>
+    </div>
     <swiper-slide>
       <slot></slot>
     </swiper-slide>
@@ -9,11 +17,26 @@
 
 <script>
   import {Swiper, SwiperSlide} from 'vue-awesome-swiper';
+  import MeLoading from 'base/loading';
+  import { // 下拉上拉的提示文字
+    PULL_DOWN_HEIGHT,
+    PULL_DOWN_TEXT_INIT,
+    PULL_DOWN_TEXT_START,
+    PULL_DOWN_TEXT_ING,
+    PULL_DOWN_TEXT_END,
+    PULL_UP_HEIGHT,
+    PULL_UP_TEXT_INIT,
+    PULL_UP_TEXT_START,
+    PULL_UP_TEXT_ING,
+    PULL_UP_TEXT_END
+  } from './config';
+
   export default {
     name: 'MeScroll',
     components: {
       Swiper,
-      SwiperSlide
+      SwiperSlide,
+      MeLoading
     },
     props: {
       scrollbar: {
@@ -22,10 +45,16 @@
       },
       data: {
         type: [Array, Object]
+      },
+      pullDown: {
+        type: Boolean,
+        default: false
       }
     },
     data() {
       return {
+        pulling: false,
+        pullDownText: PULL_DOWN_TEXT_INIT,
         swiperOption: {
           direction: 'vertical',
           slidePerView: 'auto',
@@ -34,6 +63,10 @@
           scrollbar: {
             el: this.scrollbar ? '.swiper-scrollbar' : null,
             hide: true
+          },
+          on: {
+            sliderMove: this.scroll,
+            touchEnd: this.touchEnd
           }
         }
       };
@@ -47,6 +80,46 @@
       update() {
         console.log(this.$refs.swiper);
         this.$refs.swiper && this.$refs.swiper.updateSwiper();
+      },
+
+      scroll() {
+        const swiper = this.$refs.swiper.$swiper;
+
+        if (this.pulling) return;
+
+        if (swiper.translate > 0) {
+          if (!this.pullDown) return;
+          if (swiper.translate > PULL_DOWN_HEIGHT) {
+            this.$refs.pullDownLoading.setText(PULL_DOWN_TEXT_START);
+          } else {
+            this.$refs.pullDownLoading.setText(PULL_DOWN_TEXT_INIT);
+          }
+        }
+      },
+      touchEnd() {
+        if (this.pulling) return;
+
+        const swiper = this.$refs.swiper.$swiper;
+        if (swiper.translate > PULL_DOWN_HEIGHT) {
+          if (!this.pullDown) return;
+
+          this.pulling = true;
+          swiper.allowTouchMove = false;
+          swiper.setTransition(swiper.params.speed);
+          swiper.setTranslate(PULL_DOWN_HEIGHT);
+          swiper.params.virtualTranslate = true;
+          this.$refs.pullDownLoading.setText(PULL_DOWN_TEXT_ING);
+          this.$emit('pull-down', this.pullDownEnd);
+        }
+      },
+      pullDownEnd() {
+        const swiper = this.$refs.swiper.$swiper;
+        this.$refs.pullDownLoading.setText(PULL_DOWN_TEXT_END);
+        swiper.params.virtualTranslate = false;
+        swiper.allowTouchMove = true;
+        swiper.setTransition(swiper.params.speed);
+        swiper.setTranslate(0);
+        this.pulling = false;
       }
     }
   };
@@ -59,11 +132,19 @@
     height: 100%;
   }
 
-  .swiper-wrapper{
-    height: auto;
-  }
+  // .swiper-wrapper{
+  //   height: auto;
+  // }
 
   .swiper-slide {
     height: auto;
+  }
+
+  .mine-scroll-pull-down {
+    position: absolute;
+    left: 0;
+    bottom: 100%;
+    width: 100%;
+    height: 80px;
   }
 </style>
