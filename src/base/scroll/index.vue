@@ -127,7 +127,7 @@
       },
       scroolEnd() {
         const swiper = this.$refs.swiper.$swiper;
-        this.$emit('scrollEnd', swiper.translate, this.$refs.swiper.$swiper);
+        this.$emit('scrollEnd', swiper.translate, this.$refs.swiper.$swiper, this.pulling);
       },
       touchEnd() {
         if (this.pulling) return;

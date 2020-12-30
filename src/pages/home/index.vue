@@ -1,7 +1,10 @@
 <template>
   <div class="home">
     <header class="g-header-container">
-      <home-header></home-header>
+      <home-header
+        :class="{'header-transition': isHeaderTransition}"
+        ref="header"
+      ></home-header>
     </header>
     <me-scroll
       :data="recommends"
@@ -9,12 +12,18 @@
       pullUp
       @pull-down="pullToRefresh"
       @pull-up="pullToLoadMore"
+      @scroll-end="scrollEnd"
+      @scroll="scroll"
+      @pull-down-transition-end="pullDownTransitionEnd"
+      ref="scroll"
     >
       <home-slider ref="slider"></home-slider>
       <home-nav></home-nav>
       <home-recommend @loaded='getRecommends' ref="recommend"></home-recommend>
     </me-scroll>
-    <div class="g-backtop-container"></div>
+    <div class="g-backtop-container">
+      <me-back-top :visible="isBacktopVisibel" @backtop="backToTop"></me-back-top>
+    </div>
     <router-view></router-view>
   </div>
 </template>
@@ -23,8 +32,10 @@
   import HomeHeader from './header';
   import HomeSlider from './slider';
   import MeScroll from 'base/scroll';
+  import MeBackTop from 'base/backtop';
   import HomeNav from './nav';
   import HomeRecommend from './recommend';
+  import {HEADER_TRANSITION_HEIGHT} from './config';
   export default {
     name: 'Home',
     components: {
@@ -32,11 +43,14 @@
       HomeSlider,
       MeScroll,
       HomeNav,
-      HomeRecommend
+      HomeRecommend,
+      MeBackTop
     },
     data() {
       return {
-        recommends: []
+        recommends: [],
+        isBacktopVisibel: false,
+        isHeaderTransition: false
       };
     },
     methods: {
@@ -61,6 +75,29 @@
           }
           pullUpEnd();
         });
+      },
+      scrollEnd(translate, scroll, pulling) {
+        if (!pulling) {
+          this.changeHeaderStatus(translate);
+        }
+        this.isBacktopVisibel = translate < 0 && -translate > scroll.height;
+      },
+      scroll(translate) {
+        this.changeHeaderStatus(translate);
+      },
+      pullDownTransitionEnd() {
+        // this.$refs.header.show();
+      },
+      backToTop() {
+        this.$refs.scroll && this.$refs.scroll.scrollTop();
+      },
+      changeHeaderStatus(translate) {
+        if (translate > 0) {
+          this.$refs.header.hide();
+          return;
+        }
+        this.$refs.header.show();
+        this.isHeaderTransition = -translate > HEADER_TRANSITION_HEIGHT;
       }
     }
   };
@@ -73,5 +110,9 @@
     width: 100%;
     height: 100%;
     background-color: $bgc-theme;
+  }
+  .g-backtop-container {
+    right: 30px;
+    bottom: 70px;
   }
 </style>
